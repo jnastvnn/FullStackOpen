@@ -1,0 +1,26 @@
+sequenceDiagram
+    title: New Note on Single Page App
+
+    Note over Browser:
+        When the form button is pressed,
+        the browser transmits the user input to the server.
+        The Content-Type header specifies
+        that the data format is JSON.
+    end note
+
+    Browser->>Server: HTTP POST 	https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+    Note over Server:
+        The server responds with status code 201 Created.
+        Unlike before, it does not request a redirect.
+        The browser stays on the same page,
+        and no further HTTP requests are made.
+    end note
+
+    Server-->>Browser: Responds with HTTP status code 201
+
+    Note over Browser:
+        The browser does NOT reload the Notes page.
+    end note
+
+
