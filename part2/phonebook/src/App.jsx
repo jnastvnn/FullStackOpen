@@ -27,7 +27,7 @@ const Persons = ({ persons, deletePerson }) => (
     {persons.map((person) => (
       <li 
         key={person.id}>{person.name} {person.number}
-        <button onClick={deletePerson(person.id)}>{'  Delete'}</button>
+        <button onClick={deletePerson(person.id, person.name)}>{'  Delete'}</button>
         
         
       </li>
@@ -36,13 +36,38 @@ const Persons = ({ persons, deletePerson }) => (
   </ul>
 )
 
+const Notification = ({ message }) => {
+  const NotificationStyle = {
+    color: 'black',
+    fontFamily: 'Arial, sans-serif',
+    fontSize: 30,
+    display: "flex",
+    fontWeight: 'bold',
+    height: 20,
+    width: 300,
+    boxShadow: "0 0 3px 2px #cec7c759",
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 20
+  
+  }
+  if (message === null) {
+    return null
+  }
 
+  return (
+    <div style={NotificationStyle}>
+      {message}
+    </div>
+  )
+}
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState('')
 
   useEffect(() => {
     personService
@@ -67,18 +92,21 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setNotificationMessage(`Person ${personObject.name} added`)
       })
     }
     
-  const deletePerson = (id) => { return() =>{
+  const deletePerson = (id, name) => { return() =>{
     if (window.confirm('Are you sure you want to delete this person?')){
-      console.log(id)
+      console.log('tejltjls',id)
       personService
         .deletePerson(id)          
         .then(() => {
+          setNotificationMessage(`Person ${name} deleted`)
           setPersons(persons.filter(n => n.id !== id))
           setNewName("")
           setNewNumber("")
+          
         })
         console.log(id)
     }
@@ -114,6 +142,9 @@ const App = () => {
       <h2>Phonebook</h2>
       <div>
         filter shown with: <input value={filter} onChange={handleFilterChange} />
+      </div>
+      <div>
+        <Notification message={notificationMessage}/>
       </div>
       <h3>add a new</h3>
       <PersonForm
